@@ -28,6 +28,19 @@
 }
 ```
 
+- documentを複数挿入
+
+```terminal
+> db.tours.insertMany([{ name: "The Sea Explorer", price: 497, rating: 4.8 }, { name: "The show Adventurer", price: 997, rating: 4.9, difficulty: "easy" }])
+{
+	"acknowledged" : true,
+	"insertedIds" : [
+		ObjectId("5e496c28637969c6f6dacc55"),
+		ObjectId("5e496c28637969c6f6dacc56")
+	]
+}
+```
+
 - collectionのdataを表示
 
 ```terminal
