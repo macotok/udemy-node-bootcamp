@@ -136,3 +136,19 @@ tours
 > db.tours.updateMany({ price: { $gte: 400 }, rating: { $gte: 4.8 } }, { $set: { premium: true } })
 { "acknowledged" : true, "matchedCount" : 3, "modifiedCount" : 3 }
 ```
+
+- collectionで複数のdocumentをdeleteMany({ 対象のdata })で削除
+- `deleteMany`を使用
+
+```terminal
+> db.tours.deleteMany({ rating: { $lt: 4.8 } })
+{ "acknowledged" : true, "deletedCount" : 1 }
+```
+
+- collectionの全てのdocumentを削除
+- `deleteMany`を使用
+
+```terminal
+> db.tours.deleteMany({})
+{ "acknowledged" : true, "deletedCount" : 3 }
+```
