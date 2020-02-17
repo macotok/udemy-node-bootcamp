@@ -7,6 +7,9 @@
 - prettier
 - eslint
 
+mongoDBのGUI
+- MongoDB Compass
+
 ## mongoコマンド
 
 - database作成
@@ -152,3 +155,11 @@ tours
 > db.tours.deleteMany({})
 { "acknowledged" : true, "deletedCount" : 3 }
 ```
+
+## mongoDBのGUI
+
+- mongoDB compassを使用
+
+## mongoDBをremoteで使う
+
+- mongoDB Atlasを使用
