@@ -162,4 +162,6 @@ tours
 
 ## mongoDBをremoteで使う
 
-- mongoDB Atlasを使用
+- mongoDB Atlasで管理する
+- DBはmongoDB Compassを使用してAtlasと接続
+- localの作業環境でAtlasと接続
