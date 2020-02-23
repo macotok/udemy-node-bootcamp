@@ -213,7 +213,8 @@ const Tour = mongoose.model('Tour', tourSchema); // Model名の頭文字は大�
 ### document追加
 
 - modelとschemaを定義したTour classの引数にdataを挿入
-- save後のハンドリングをpromiseで行う
+- saveメソッドはpromiseを返すのでエラーハンドリングも行う
+- saveメソッドは古いversion。後述のcreateメソッドを使う
 
 ```javascript
 const testTour = new Tour({
@@ -230,4 +231,27 @@ testTour
   .catch(err => {
     console.log('ERROR:', err);
   });
+```
+
+- createメソッドでrequest dataを扱う
+- async awaitでdata取得
+- エラーハンドリグをtry catch文で行う
+
+```javascript
+exports.createTour = async (req, res) => {
+  try {
+    const newTour = await Tour.create(req.body);
+    res.status(201).json({
+      status: 'success',
+      data: {
+        tour: newTour
+      }
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: 'Invalid data sent'
+    });
+  }
+};
 ```
