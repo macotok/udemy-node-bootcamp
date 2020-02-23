@@ -186,7 +186,7 @@ mongoose
   .then(() => console.log('DB connection successful'));
 ```
 
-### document設定
+### documentのschema設定
 
 - 型定義
 - 必須とエラーメッセージを設定
@@ -200,12 +200,34 @@ const tourSchema = new mongoose.Schema({
     required: [true, 'A tour must have a name'], // 必須とエラーメッセージを設定
     unique: true // 一意を設定
   },
-  age: String, // 型のみ指定
   rating: {
     type: Number,
     default: 4.5 // 初期値設定
   },
+  price: Number // 型のみ定義
 });
 
 const Tour = mongoose.model('Tour', tourSchema); // Model名の頭文字は大文字
+```
+
+### document追加
+
+- modelとschemaを定義したTour classの引数にdataを挿入
+- save後のハンドリングをpromiseで行う
+
+```javascript
+const testTour = new Tour({
+  name: 'The Forest Hiker',
+  rating: 4.7,
+  price: 997
+});
+
+testTour
+  .save()
+  .then(doc => {
+    console.log(doc);
+  })
+  .catch(err => {
+    console.log('ERROR:', err);
+  });
 ```
