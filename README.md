@@ -165,3 +165,47 @@ tours
 - mongoDB Atlasで管理する
 - DBはmongoDB Compassを使用してAtlasと接続
 - localの作業環境でAtlasと接続
+
+## mongoose
+
+- mongoDBとNode.jsアプリケーションの中間レイヤー
+- mongoDBを操作するためのライブラリ
+
+### mongoDBとの接続
+
+```javascript
+const mongoose = require('mongoose');
+const DB = process.env.DATABASE; // Atlasで設定されたURL
+
+mongoose
+  .connect(DB, {
+    useNewUrlParser: true, // ローカルで実行されているデータベースをデフォルトポート(27017)で接続するために最低限必要な設定
+    useCreateIndex: true, // Model.initを介した自動インデックス構築にensureIndexではなくcreateIndexを使用
+    useFindAndModify: false // findOneAndUpdate、およびfindOneAndRemoveがfindAndModifyではなくネイティブfindOneAndUpdateを使用
+  })
+  .then(() => console.log('DB connection successful'));
+```
+
+### document設定
+
+- 型定義
+- 必須とエラーメッセージを設定
+- 初期値設定
+- 一意を設定
+
+```javascript
+const tourSchema = new mongoose.Schema({
+  name: {
+    type: String, // 型定義
+    required: [true, 'A tour must have a name'], // 必須とエラーメッセージを設定
+    unique: true // 一意を設定
+  },
+  age: String, // 型のみ指定
+  rating: {
+    type: Number,
+    default: 4.5 // 初期値設定
+  },
+});
+
+const Tour = mongoose.model('Tour', tourSchema); // Model名の頭文字は大文字
+```
