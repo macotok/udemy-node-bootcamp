@@ -308,3 +308,32 @@ exports.getTour = async (req, res) => {
   }
 };
 ```
+
+### collectionで指定したIDのdocument更新
+
+- async awaitでdata取得
+- findByIdAndUpdateメソッドの引数(更新したいidを指定、更新内容、option)を指定
+- try、catch文でエラーハンドリグ
+
+```javascript
+exports.updateTour = async (req, res) => {
+  try {
+    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+      new: true, // オリジナルではなく変更されたドキュメントを返す場合はtrue
+      runValidators: true // trueの場合、このコマンドで更新バリデーターを実行します。Modelのschemaに対して更新操作を検証します。
+    });
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour
+      }
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err
+    });
+  }
+};
+```
