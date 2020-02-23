@@ -235,7 +235,7 @@ testTour
 
 - createメソッドでrequest dataを扱う
 - async awaitでdata取得
-- エラーハンドリグをtry catch文で行う
+- try catch文でエラーハンドリグ
 
 ```javascript
 exports.createTour = async (req, res) => {
@@ -251,6 +251,59 @@ exports.createTour = async (req, res) => {
     res.status(400).json({
       status: 'fail',
       message: 'Invalid data sent'
+    });
+  }
+};
+```
+
+### collectionの全document取得
+
+- async awaitでdata取得
+- findメソッドでcollectionの全document取得
+- try、catch文でエラーハンドリグ
+
+```javascript
+exports.getAllTours = async (req, res) => {
+  try {
+    const tours = await Tour.find();
+
+    res.status(200).json({
+      status: 'success',
+      results: tours.length,
+      data: {
+        tours
+      }
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err
+    });
+  }
+};
+``` 
+
+### collectionで指定したIDのdocument取得
+
+- async awaitでdata取得
+- findByIdメソッドの引数に取得したいidを指定
+- try、catch文でエラーハンドリグ
+
+```javascript
+exports.getTour = async (req, res) => {
+  try {
+    const tour = await Tour.findById(req.params.id);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour
+      }
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err
     });
   }
 };
