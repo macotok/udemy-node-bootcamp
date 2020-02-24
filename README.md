@@ -190,21 +190,30 @@ mongoose
 
 - 型定義
 - 必須とエラーメッセージを設定
-- 初期値設定
+- デフォルト値設定
 - 一意を設定
+- 前後の空白を埋める
+- 配列の中に文字列が入る
+- 時間の型定義と現在時刻のデフォルト値を設定
 
 ```javascript
 const tourSchema = new mongoose.Schema({
   name: {
     type: String, // 型定義
     required: [true, 'A tour must have a name'], // 必須とエラーメッセージを設定
-    unique: true // 一意を設定
+    unique: true, // 一意を設定
+    trim: true  // 前後の空白を埋める('   hoge foo  ') -> ('hoge foo') 
   },
   rating: {
     type: Number,
-    default: 4.5 // 初期値設定
+    default: 4.5 // デフォルト値設定
   },
-  price: Number // 型のみ定義
+  price: Number, // 型のみ定義
+  image: [String], // 配列の中に文字列が入る
+  createdAt: {
+    type: Date, // 時間の型定義
+    default: Date.now() // 現在時刻をデフォルト値に設定
+  }
 });
 
 const Tour = mongoose.model('Tour', tourSchema); // Model名の頭文字は大文字
