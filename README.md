@@ -337,3 +337,27 @@ exports.updateTour = async (req, res) => {
   }
 };
 ```
+
+### collectionで指定したIDのdocument削除
+
+- async awaitでdata取得
+- findOneAndDeleteメソッドの引数(削除したいidを指定)を指定
+- try、catch文でエラーハンドリグ
+
+```javascript
+exports.deleteTour = async (req, res) => {
+  try {
+    await Tour.findOneAndDelete(req.params.id);
+
+    res.status(204).json({
+      status: 'success',
+      data: null
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err
+    });
+  }
+};
+```
