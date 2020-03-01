@@ -412,3 +412,38 @@ const deleteData = async () => {
   process.exit();
 };
 ```
+
+## Filtering
+
+### findメソッドとmongooseメソッドを使用
+
+- findメソッドを使用
+- `res.query`でquery取得
+
+```javascript
+const tours = await Tour.find({
+  duration: 5,
+  difficulty: 'easy'
+});
+```
+
+- mongooseメソッドを使用
+- `res.query`でquery取得
+
+```javascript
+const tours = await Tour.find()
+  .where('duration')
+  .equals(5)
+  .where('difficulty')
+  .equals('easy');
+```
+
+### filtering対象外を指定
+
+```javascript
+const queryObj = { ...req.query };
+const excludedFields = ['page', 'sort', 'limit', 'fields'];
+excludedFields.forEach(el => delete queryObj[el]);
+
+Tour.find(queryObj);
+```
