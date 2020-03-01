@@ -370,3 +370,45 @@ exports.deleteTour = async (req, res) => {
   }
 };
 ```
+
+## jsonファイルをschemaに則ってimport
+
+- jsonファイルを読み込む
+
+```javascript
+const tours = JSON.parse(
+  fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8')
+);
+```
+
+- `Tour`はmongooseで定義したschema
+- `Tour`はmodelからimport
+- `process.exit();`でアプリケーション終了
+
+```javascript
+const importData = async () => {
+  try {
+    await Tour.create(tours);
+    console.log('Data successfully loaded');
+  } catch (err) {
+    console.log(err);
+  }
+  process.exit();
+};
+```
+
+- `Tour`はmongooseで定義したschema
+- `Tour`はmodelからimport
+- `process.exit();`でアプリケーション終了
+
+```javascript
+const deleteData = async () => {
+  try {
+    await Tour.deleteMany();
+    console.log('Data successfully deleted');
+  } catch (err) {
+    console.log(err);
+  }
+  process.exit();
+};
+```
