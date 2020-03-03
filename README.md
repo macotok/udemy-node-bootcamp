@@ -450,7 +450,7 @@ Tour.find(queryObj);
 
 ### gte、gt、lte、ltに対応
 
-- `/api/v1/tours&price[gte]=1500`に対応
+- `/api/v1/tours?price[gte]=1500`に対応
 
 ```javascript
 const queryObj = { ...req.query };
@@ -461,7 +461,7 @@ Tour.find(JSON.parse(queryStr));
 
 ### sortに対応
 
-- `/api/v1/tours&sort=-price`に対応
+- `/api/v1/tours?sort=-price`に対応
 - `-`を付けると昇順になる
 - 複数指定する場合はカンマでつなげる`/api/v1/tours&sort=-price,-average`
 
@@ -473,5 +473,20 @@ if (req.query.sort) {
   query = query.sort(sortBy);
 } else {
   query = query.sort('-createdAt');
+}
+```
+
+### Fieldを絞って表示
+
+- `/api/v1/tours?fields=name,price`に対応
+- `-`を付けると表示されない
+
+```javascript
+let query = Tour.find(JSON.parse(queryStr));
+if (req.query.fields) {
+  const fields = req.query.fields.split(',').join(' ');
+  query = query.select(fields);
+} else {
+  query = query.select('-__v'); // `__v` fieldは表示されない
 }
 ```
