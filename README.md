@@ -447,3 +447,31 @@ excludedFields.forEach(el => delete queryObj[el]);
 
 Tour.find(queryObj);
 ```
+
+### gte、gt、lte、ltに対応
+
+- `/api/v1/tours&price[gte]=1500`に対応
+
+```javascript
+const queryObj = { ...req.query };
+let queryStr = JSON.stringify(queryObj);
+queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+Tour.find(JSON.parse(queryStr));
+```
+
+### sortに対応
+
+- `/api/v1/tours&sort=-price`に対応
+- `-`を付けると昇順になる
+- 複数指定する場合はカンマでつなげる`/api/v1/tours&sort=-price,-average`
+
+```javascript
+let query = Tour.find(JSON.parse(queryStr));
+if (req.query.sort) {
+  const sortBy = req.query.sort.split(',').join(' ');
+  // { -price -average } 半角空けると複数sortに対応
+  query = query.sort(sortBy);
+} else {
+  query = query.sort('-createdAt');
+}
+```
