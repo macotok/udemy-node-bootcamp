@@ -476,10 +476,10 @@ if (req.query.sort) {
 }
 ```
 
-### Fieldを絞って表示
+### Fieldを絞って抽出
 
 - `/api/v1/tours?fields=name,price`に対応
-- `-`を付けると表示されない
+- `-`を付けると抽出されない
 
 ```javascript
 let query = Tour.find(JSON.parse(queryStr));
@@ -487,6 +487,25 @@ if (req.query.fields) {
   const fields = req.query.fields.split(',').join(' ');
   query = query.select(fields);
 } else {
-  query = query.select('-__v'); // `__v` fieldは表示されない
+  query = query.select('-__v'); // `__v` fieldは抽出されない
+}
+```
+
+### Pagination対応
+
+- mongooseの`skip`メソッドを使用
+- mongooseの`countDocuments`メソッドでdocument数取得
+- document数以上のpaginationは作成されないようにハンドリング
+
+```javascript
+const page = req.query.page * 1 || 1;
+const limit = req.query.limit * 1 || 100;
+const skip = (page - 1) * limit;
+
+query = query.skip(skip).limit(limit);
+
+if (req.query.page) {
+  const numTours = await Tour.countDocuments();
+  if (skip >= numTours) throw new Error('this page does not exits');
 }
 ```
