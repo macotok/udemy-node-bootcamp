@@ -509,3 +509,61 @@ if (req.query.page) {
   if (skip >= numTours) throw new Error('this page does not exits');
 }
 ```
+
+## Aggregation(集計)
+
+- mongoDBのメソッド`aggregate`でdataの集計を行う
+- `$match`で該当のdataを集計
+- `$group`で集計するグループを設定
+- `$toUpper`で大文字に変換
+- `$sum`で合計値を集計
+- `$avg`で平均値を集計
+- `$min`で最小値を取得
+- `$max`で最大値を取得
+- `$sort`で並び替え
+
+```javascript
+const stats = Tour.aggregate([
+  {
+    $match: { ratingsAverage: { $gte: 4.5 } }
+  },
+  {
+    $group: {
+      _id: { $toUpper: '$difficulty' },
+      numTours: { $sum: 1 },
+      numRatings: { $sum: '$ratingsQuantity'},
+      avgRating: { $avg: '$ratingsAverage' },
+      avgPrice: { $avg: '$price' },
+      minPrice: { $min: '$price' },
+      maxPrice: { $max: '$price' }
+    }
+  },
+  {
+    $sort: { avgPrice: 1 }
+  }
+]);
+```
+
+集計結果
+```json
+"stats": [
+    {
+        "_id": "DIFFICULT",
+        "numTours": 2,
+        "numRatings": 41,
+        "avgRating": 4.7,
+        "avgPrice": 748.5,
+        "minPrice": 500,
+        "maxPrice": 997
+    },
+    {
+        "_id": "MEDIUM",
+        "numTours": 3,
+        "numRatings": 70,
+        "avgRating": 4.8,
+        "avgPrice": 1663.6666666666667,
+        "minPrice": 497,
+        "maxPrice": 2997
+    }
+]
+```
