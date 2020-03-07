@@ -567,3 +567,137 @@ const stats = Tour.aggregate([
     }
 ]
 ```
+
+- `$unwind`で対象の配列のdocumentを展開
+- 日時を抽出するときの書き方`new Date(${year}-01-01)`
+- `$month`で1-12で表示
+- `$push`で`$sum`の合計値が複数の場合に配列でList化
+- `$addFields`で集計のFieldを追加
+- `$project`で集計する項目を指定
+- `$limit`で集計した表示数を指定
+
+```javascript
+const year = req.params.year * 1;
+
+const plan = await Tour.aggregate([
+  {
+    $unwind: '$startDates'
+  },
+  {
+    $match: {
+      startDates: {
+        $gte: new Date(`${year}-01-01`),
+        $lte: new Date(`${year}-12-31`)
+      }
+    }
+  },
+  {
+    $group: {
+      _id: { $month: '$startDates' },
+      numTourStats: { $sum: 1 },
+      tours: { $push: '$name' }
+    }
+  },
+  {
+    $addFields: { month: '$_id' }
+  },
+  {
+    $project: {
+      _id: 0
+    }
+  },
+  {
+    $sort: {
+      numTourStats: -1
+    }
+  },
+  {
+    $limit: 12
+  }
+]);
+```
+
+集計結果
+
+```json
+"plan": [
+    {
+        "numTourStats": 3,
+        "tours": [
+            "The Forest Hiker",
+            "The Sea Explorer",
+            "The Sports Lover"
+        ],
+        "month": 7
+    },
+    {
+        "numTourStats": 2,
+        "tours": [
+            "The Sea Explorer",
+            "The Park Camper"
+        ],
+        "month": 8
+    },
+    {
+        "numTourStats": 2,
+        "tours": [
+            "The Forest Hiker",
+            "The Star Gazer"
+        ],
+        "month": 10
+    },
+    {
+        "numTourStats": 2,
+        "tours": [
+            "The Sea Explorer",
+            "The City Wanderer"
+        ],
+        "month": 6
+    },
+    {
+        "numTourStats": 2,
+        "tours": [
+            "The Forest Hiker",
+            "The Wine Taster"
+        ],
+        "month": 4
+    },
+    {
+        "numTourStats": 2,
+        "tours": [
+            "The Wine Taster",
+            "The Sports Lover"
+        ],
+        "month": 9
+    },
+    {
+        "numTourStats": 2,
+        "tours": [
+            "The City Wanderer",
+            "The Star Gazer"
+        ],
+        "month": 3
+    },
+    {
+        "numTourStats": 1,
+        "tours": [
+            "The City Wanderer"
+        ],
+        "month": 5
+    },
+    {
+        "numTourStats": 1,
+        "tours": [
+            "The Northern Lights"
+        ],
+        "month": 12
+    },
+    {
+        "numTourStats": 1,
+        "tours": [
+            "The Wine Taster"
+        ],
+        "month": 2
+    }
+]
+```
