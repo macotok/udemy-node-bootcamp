@@ -701,3 +701,24 @@ const plan = await Tour.aggregate([
     }
 ]
 ```
+
+## virtualで永続化しないdocumentを追加
+
+- `durationWeeks`をSchemaに永続化しないdocumentとして登録
+- `new mongoose.Schema`の第二引数にvirtualsを設定
+
+```javascript
+const tourSchema = new mongoose.Schema(
+  {
+    ...
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+  }
+);
+
+tourSchema.virtual('durationWeeks').get(function() {
+  return this.duration / 7;
+});
+```
