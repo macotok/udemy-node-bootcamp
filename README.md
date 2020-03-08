@@ -722,3 +722,30 @@ tourSchema.virtual('durationWeeks').get(function() {
   return this.duration / 7;
 });
 ```
+
+## middleWare
+
+### pre
+
+- `save()、create()`する前に実行する処理
+- `next()`で次の処理を実行
+
+```javascript
+tourSchema.pre('save', function(next) {
+  this.slug = slugify(this.name, { lower: true });
+  next();
+});
+```
+
+### post
+
+- `save()、create()`した後に実行する処理
+- `doc()`で処理結果が反映される
+- `next()`で次の処理を実行
+
+```javascript
+tourSchema.post('save', function(doc, next) {
+  console.log(doc);
+  next();
+});
+```
